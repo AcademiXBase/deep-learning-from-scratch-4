@@ -41,27 +41,62 @@ https://koki0702.github.io/dezero-p100/
 ## Pythonと外部ライブラリ
 ソースコードを実行するには、下記のソフトウェアが必要です。
 
-* Python 3.x（バージョン3系）
+* Python 3.11
 * NumPy
 * Matplotlib
 * OpenAI Gym
 * DeZero （または PyTorch）
 
 
-本書では、ディープラーニングのフレームワークとしてDeZeroを使います。DeZeroは「ゼロから作るDeep Learning」シリーズの3作目で作ったフレームワークです（ `pip install dezero` からインストールできます）。
+本書では、ディープラーニングのフレームワークとしてDeZeroを使います。DeZeroは「ゼロから作るDeep Learning」シリーズの3作目で作ったフレームワークです。以下の手順で必要なライブラリとともにインストールできます。
 
 PyTorchを使った実装は[pytorchフォルダ](https://github.com/oreilly-japan/deep-learning-from-scratch-4/tree/master/pytorch)にて提供しています。
 
+## uvでの環境構築
+
+[uvの公式手順](https://docs.astral.sh/uv/getting-started/installation/)に従ってuvをインストールし、リポジトリのルートで次を実行してください。
+
+```bash
+uv sync --locked
+```
+
+Python 3.11と必要なライブラリを用意し、`.venv`に仮想環境を作成します。依存関係は`pyproject.toml`、具体的なバージョンは`uv.lock`で管理します。`uv run`を使えば仮想環境を手動で有効化する必要はありません。
+
+書籍のコードとの互換性のため、DeZero 0.0.13が使う`np.int`に対応するNumPy 1.23.5と、`reset()`が観測のみ、`step()`が4要素を返すGym 0.23.1を固定しています。Gymの描画用には、Python 3.11に対応するpygameを別途指定しています。
+
+Notebookをローカルで使う場合は、追加の依存関係を含めて起動してください。
+
+```bash
+uv run --extra notebooks jupyter lab notebooks
+```
+
+JupyterLab、ipykernel、dezerogymもインストールされます。Notebook内の`!pip install ...`セルは実行せず、スキップしてください。依存関係はuvで管理します。
+
+PyTorch版は次のように実行できます。Linux・Windowsでは公式CPU版の配布元、macOSではPyPIからPyTorchをインストールします。現在の`uv.lock`にあるmacOS向けPyTorchは、Apple Silicon搭載のmacOS 14以降が対象です。
+
+```bash
+uv run --extra pytorch python3 pytorch/dqn.py
+```
+
+依存関係を追加するときは`uv add パッケージ名`を使うと、`pyproject.toml`と`uv.lock`が更新されます。
+
 ## 実行方法
 各章のフォルダに該当するコードがあります。
-実行するためには、下記のとおりPythonコマンドを実行します（どのディレクトリからでも実行できます）。
+リポジトリのルート、または各章のディレクトリで、下記のとおり実行します。
 
+```bash
+uv run python3 ch01/avg.py
+uv run python3 ch08/dqn.py
+
+cd ch09
+uv run python3 actor_critic.py
 ```
-$ python ch01/avg.py
-$ python ch08/dqn.py
 
-$ cd ch09
-$ python actor_critic.py
+グラフやCartPoleのウィンドウ表示にはGUI環境が必要です。画面のない環境で動作確認する場合は、次のように表示を無効化できます（Linux・macOS）。
+
+```bash
+MPLBACKEND=Agg uv run python3 ch04/policy_eval.py
+SDL_VIDEODRIVER=dummy uv run python3 ch08/gym_play.py
 ```
 
 ## ライセンス
