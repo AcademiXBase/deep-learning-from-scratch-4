@@ -13,6 +13,7 @@ dependencies = [
     # DeZero and the PyTorch examples use aliases removed in NumPy 1.24.
     "numpy==1.23.5",
     # gym[classic_control] pins pygame 2.1.0, which lacks Python 3.11 wheels.
+    "pandas>=2.3.3",
     "pygame>=2.6.1,<3",
 ]
 
